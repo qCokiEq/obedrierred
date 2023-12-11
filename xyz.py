@@ -20,6 +20,7 @@ class Ui_MainWindow(object):
         return
 
     def setupUi(self, MainWindow):
+        self.files = []
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(660, 503)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -87,7 +88,6 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuMain.menuAction())
         self.menubar.addAction(self.menuOthers.menuAction())
 
-        self.files = []
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -106,20 +106,29 @@ class Ui_MainWindow(object):
                                                                                  "GeometryDash"))
         print(path)
         self.files = os.listdir(path)
+        print(self.files)
         for i in self.files:
             item = QtGui.QStandardItem(i)
             self.model.appendRow(item)
 
     def backup_files(self):
-        pth = r'C:/Users/Dell/Documents/gdbacks'
-        date = str(datetime.datetime.now().date())
-        if os.path.exists(fr'C:/Users/Dell/Documents/gdbacks/{date}'):
-            n_dir = fr'C:/Users/Dell/Documents/gdbacks/{date}-{len(os.listdir(pth)) + 1}'
-            os.mkdir(n_dir)
-            for file in self.files:
-                print(file )# [43:])
-                shutil.copyfile(file,
-                                fr'{n_dir}/{file[43:]}')
+        print("BackupFiles Button Pushed!")
+        if not self.files:
+            return
+        else:
+            pth = r'C:/Users/Dell/Documents/gdbacks'
+            print(pth)
+            date = str(datetime.datetime.now().date())
+            print(date)
+            if os.path.exists(fr'C:/Users/Dell/Documents/gdbacks/{date}'):
+                n_dir = fr'C:/Users/Dell/Documents/gdbacks/{date}-{len(os.listdir(pth)) + 1}'
+                print(n_dir)
+                os.mkdir(n_dir)
+                for file in self.files:
+                    print("ok")
+                    print(file )# [43:])
+                    shutil.copyfile(file,
+                                    fr'{n_dir}/{file[43:]}')
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
