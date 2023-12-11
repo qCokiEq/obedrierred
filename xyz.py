@@ -112,6 +112,7 @@ class Ui_MainWindow(object):
             self.model.appendRow(item)
 
     def backup_files(self):
+        print(self.files)
         print("BackupFiles Button Pushed!")
         if not self.files:
             return
