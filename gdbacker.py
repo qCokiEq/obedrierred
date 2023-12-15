@@ -23,6 +23,7 @@ def backup(files: list):
         nw_dir = fr'C:/Users/Dell/Documents/gdbacks/{date}'
         os.mkdir(nw_dir)
         for file in files:
+            print(file)
             shutil.copyfile(file,
                             fr'{nw_dir}/{file[43:]}')
 

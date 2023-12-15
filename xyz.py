@@ -9,10 +9,49 @@
 
 from tkinter.filedialog import askdirectory
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QStandardItemModel, QTextList
 import os
 import datetime
 import shutil
+import json
+
+class ModelessDialog(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("Baseline")
+        self.setGeometry(800, 275, 300, 200)
+
+        label = QLabel("Set time in minutes")
+        self.label2 = QLabel("Time : {:,.2f}".format(0))
+
+        self.spinBox = QDoubleSpinBox()
+        self.spinBox.valueChanged.connect(self.valueChang)
+        self.spinBox.setSingleStep(10.0)
+        self.spinBox.setMaximum(100)
+        buttonBox = QDialogButtonBox(
+            QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+
+        layout = QVBoxLayout()
+        layout.addWidget(label)
+        layout.addWidget(self.label2)
+        layout.addWidget(self.spinBox)
+        layout.addWidget(buttonBox)
+        self.resize(300, 200)
+        self.setLayout(layout)
+
+        okBtn = buttonBox.button(QDialogButtonBox.Ok)
+        okBtn.clicked.connect(self.apply)
+
+        cancelBtn = buttonBox.button(QDialogButtonBox.Cancel)
+        cancelBtn.clicked.connect(self.reject)
+
+    def apply(self):
+        print(f"{self.spinBox.value()}")
+
+    def valueChang(self):
+        self.label2.setText("TimeNew : {:,.1f}".format(self.spinBox.value()))
+
 
 class Ui_MainWindow(object):
 
@@ -70,9 +109,6 @@ class Ui_MainWindow(object):
         self.pushButton_2.setObjectName("pushButton_2")
         self.verticalLayout.addWidget(self.pushButton_2)
 
-
-
-
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 660, 21))
@@ -88,24 +124,38 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuMain.menuAction())
         self.menubar.addAction(self.menuOthers.menuAction())
 
-
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
         self.directoryOpen.clicked.connect(self.openDir)
         self.pushButton.clicked.connect(self.backup_files)
+        self.pushButton_2.clicked.connect(self.setTimer)
+
+        self.path = ""
 
     def checker(self):
         print("Oh Okay!")
 
+    def setTimer(self):
+        self.dialog = ModelessDialog()
+        self.dialog.show()
+        # QMessageBox.about(self, "My message box", "Text1 = %s, Text2 = %s" % (
+        #     self.edit1.text(), self.edit2.text()))
+
+    def saveTo(self,data):
+        with open('various_settings.json','w') as f:
+            json.dump(data, f, ensure_ascii=False, indent=4)
+        return
+
     def openDir(self):
         # self.files.clear()
         self.model.clear()
-        path = QtWidgets.QFileDialog.getExistingDirectory(caption="Open GD Files Folder",
-                                                          directory=os.path.join(os.getenv("LOCALAPPDATA"),
-                                                                                 "GeometryDash"))
-        print(path)
-        self.files = os.listdir(path)
+        self.path = QtWidgets.QFileDialog.getExistingDirectory(caption="Open GD Files Folder",
+                                                               directory=os.path.join(os.getenv("LOCALAPPDATA"),
+                                                                                      "GeometryDash"))
+        for f in os.listdir(self.path):
+            self.files.append(self.path + '/' + f)
+
         print(self.files)
         for i in self.files:
             item = QtGui.QStandardItem(i)
@@ -118,7 +168,6 @@ class Ui_MainWindow(object):
             return
         else:
             pth = r'C:/Users/Dell/Documents/gdbacks'
-            print(pth)
             date = str(datetime.datetime.now().date())
             print(date)
             if os.path.exists(fr'C:/Users/Dell/Documents/gdbacks/{date}'):
@@ -127,9 +176,20 @@ class Ui_MainWindow(object):
                 os.mkdir(n_dir)
                 for file in self.files:
                     print("ok")
-                    print(file )# [43:])
+                    print(f"{self.path}file")  # [43:])
                     shutil.copyfile(file,
-                                    fr'{n_dir}/{file[43:]}')
+                                    fr"{n_dir}/{file.split('/')[-1]}")
+            else:
+                print(self.path)
+                nw_dir = fr'C:/Users/Dell/Documents/gdbacks/{date}'
+                os.mkdir(nw_dir)
+                for file in self.files:
+                    print(os.path.join(self.path, file[43:]))
+                for file in self.files:
+                    shutil.copyfile(file,
+                                    fr"{nw_dir}/{file.split('/')[-1]}")
+
+
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate

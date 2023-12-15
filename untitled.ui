@@ -13,6 +13,11 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(255, 170, 172);
+border-color: rgb(0, 0, 0);
+gridline-color: rgb(255, 255, 0);</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLabel" name="mainTitle">
     <property name="geometry">
@@ -51,13 +56,32 @@
      </property>
      <item>
       <widget class="QPushButton" name="directoryOpen">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 147, 149);
+font: 18pt &quot;MS Sans Serif&quot;;
+selection-background-color: rgb(255, 134, 227);
+selection-color: rgb(255, 135, 187);
+border-color: rgb(0, 0, 0);
+border-top-color: rgb(153, 73, 57);</string>
+       </property>
        <property name="text">
         <string>Open Directory</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QListView" name="listView"/>
+      <widget class="QListView" name="listView">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 230, 213);</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QScrollBar" name="horizontalScrollBar">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -73,26 +97,25 @@
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
       <widget class="QPushButton" name="pushButton">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 147, 149);
+border-color: rgb(0, 0, 0);
+border-top-color: rgb(153, 73, 57);
+font: 18pt &quot;MS Sans Serif&quot;;</string>
+       </property>
        <property name="text">
         <string>Backup Files</string>
        </property>
       </widget>
      </item>
      <item>
-      <spacer name="verticalSpacer">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>40</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
       <widget class="QPushButton" name="pushButton_2">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 147, 149);
+border-color: rgb(0, 0, 0);
+border-top-color: rgb(153, 73, 57);
+font: 18pt &quot;MS Sans Serif&quot;;</string>
+       </property>
        <property name="text">
         <string>Set Timer</string>
        </property>
