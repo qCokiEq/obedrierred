@@ -16,14 +16,26 @@ import datetime
 import shutil
 import json
 
+timeSet = 0
+
+try:
+    with open('various_settings.json', 'r') as fin:
+        data = json.load(fin)
+        timeSet = float(data['minutes_backed'])
+        print(timeSet)
+except FileNotFoundError as exc:
+    pass
+
+
 class ModelessDialog(QDialog):
+    global timeSet
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("Baseline")
         self.setGeometry(800, 275, 300, 200)
 
         label = QLabel("Set time in minutes")
-        self.label2 = QLabel("Time : {:,.2f}".format(0))
+        self.label2 = QLabel("Time : {:,.2f}".format(timeSet))
 
         self.spinBox = QDoubleSpinBox()
         self.spinBox.valueChanged.connect(self.valueChang)
@@ -46,8 +58,17 @@ class ModelessDialog(QDialog):
         cancelBtn = buttonBox.button(QDialogButtonBox.Cancel)
         cancelBtn.clicked.connect(self.reject)
 
+    def saveTo(self,data):
+        with open('various_settings.json','w') as f:
+            json.dump(data, f, ensure_ascii=False, indent=4)
+        return
+
     def apply(self):
+        global timeSet
         print(f"{self.spinBox.value()}")
+        timeSet = self.spinBox.value()
+        obj = {'minutes_backed': f'{timeSet}'}
+        self.saveTo(obj)
 
     def valueChang(self):
         self.label2.setText("TimeNew : {:,.1f}".format(self.spinBox.value()))
@@ -139,13 +160,11 @@ class Ui_MainWindow(object):
     def setTimer(self):
         self.dialog = ModelessDialog()
         self.dialog.show()
+
         # QMessageBox.about(self, "My message box", "Text1 = %s, Text2 = %s" % (
         #     self.edit1.text(), self.edit2.text()))
 
-    def saveTo(self,data):
-        with open('various_settings.json','w') as f:
-            json.dump(data, f, ensure_ascii=False, indent=4)
-        return
+
 
     def openDir(self):
         # self.files.clear()
